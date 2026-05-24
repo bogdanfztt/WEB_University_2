@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Лабораторная 4 - Анкета с Cookies</title>
+    <title>Лабораторная 5 - Анкета с авторизацией</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -26,6 +26,8 @@
             text-align: center;
         }
         .header h1 { font-size: 28px; margin-bottom: 10px; }
+        .auth-link { text-align: right; padding: 15px 30px; background: #f5f5f5; border-bottom: 1px solid #ddd; }
+        .auth-link a { color: #667eea; text-decoration: none; font-weight: bold; }
         form { padding: 30px; }
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
@@ -60,19 +62,19 @@
 </head>
 <body>
 <div class="container">
+    <div class="auth-link">
+        <?php if (!empty($_SESSION['user_id'])): ?>
+            <a href="logout.php">🚪 Выйти</a>
+        <?php else: ?>
+            <a href="login.php">🔐 Войти</a>
+        <?php endif; ?>
+    </div>
     <div class="header">
-        <h1>📝 Анкета участника (с Cookies)</h1>
+        <h1>📝 Анкета участника (с авторизацией)</h1>
         <p>Заполните все обязательные поля</p>
     </div>
-    <div style="text-align: right; padding: 10px 30px;">
-    <?php if (!empty($_SESSION['user_id'])): ?>
-        <a href="logout.php">🚪 Выйти</a>
-    <?php else: ?>
-        <a href="login.php">🔐 Войти</a>
-    <?php endif; ?>
-</div>
 
-    <?php if (!empty($messages)): ?>
+    <?php if (!empty($messages) && is_array($messages)): ?>
         <?php foreach ($messages as $msg): ?>
             <?= $msg ?>
         <?php endforeach; ?>
@@ -81,24 +83,24 @@
     <form action="index.php" method="POST">
         <div class="form-group">
             <label class="required">ФИО</label>
-            <input type="text" name="full_name" value="<?= htmlspecialchars($values['full_name'] ?? '') ?>" class="<?= $errors['full_name'] ? 'error-field' : '' ?>">
+            <input type="text" name="full_name" value="<?= htmlspecialchars($values['full_name'] ?? '') ?>" class="<?= isset($errors['full_name']) && $errors['full_name'] ? 'error-field' : '' ?>">
             <small>Только буквы, пробелы и дефис. Не более 150 символов.</small>
         </div>
 
         <div class="form-group">
             <label class="required">Телефон</label>
-            <input type="tel" name="phone" value="<?= htmlspecialchars($values['phone'] ?? '') ?>" class="<?= $errors['phone'] ? 'error-field' : '' ?>">
+            <input type="tel" name="phone" value="<?= htmlspecialchars($values['phone'] ?? '') ?>" class="<?= isset($errors['phone']) && $errors['phone'] ? 'error-field' : '' ?>">
             <small>Формат: +7XXXXXXXXXX или 8XXXXXXXXXX</small>
         </div>
 
         <div class="form-group">
             <label class="required">Email</label>
-            <input type="email" name="email" value="<?= htmlspecialchars($values['email'] ?? '') ?>" class="<?= $errors['email'] ? 'error-field' : '' ?>">
+            <input type="email" name="email" value="<?= htmlspecialchars($values['email'] ?? '') ?>" class="<?= isset($errors['email']) && $errors['email'] ? 'error-field' : '' ?>">
         </div>
 
         <div class="form-group">
             <label class="required">Дата рождения</label>
-            <input type="date" name="birth_date" value="<?= htmlspecialchars($values['birth_date'] ?? '') ?>" class="<?= $errors['birth_date'] ? 'error-field' : '' ?>">
+            <input type="date" name="birth_date" value="<?= htmlspecialchars($values['birth_date'] ?? '') ?>" class="<?= isset($errors['birth_date']) && $errors['birth_date'] ? 'error-field' : '' ?>">
             <small>Возраст от 18 до 100 лет</small>
         </div>
 
@@ -108,14 +110,14 @@
                 <label><input type="radio" name="gender" value="male" <?= (($values['gender'] ?? '') == 'male') ? 'checked' : '' ?>> Мужской</label>
                 <label><input type="radio" name="gender" value="female" <?= (($values['gender'] ?? '') == 'female') ? 'checked' : '' ?>> Женский</label>
             </div>
-            <?php if ($errors['gender']): ?>
+            <?php if (isset($errors['gender']) && $errors['gender']): ?>
                 <small style="color: red;">Выберите пол</small>
             <?php endif; ?>
         </div>
 
         <div class="form-group">
             <label class="required">Любимые языки программирования</label>
-            <select name="languages[]" multiple class="<?= $errors['languages'] ? 'error-field' : '' ?>">
+            <select name="languages[]" multiple class="<?= isset($errors['languages']) && $errors['languages'] ? 'error-field' : '' ?>">
                 <option value="1" <?= in_array(1, $values['languages'] ?? []) ? 'selected' : '' ?>>Pascal</option>
                 <option value="2" <?= in_array(2, $values['languages'] ?? []) ? 'selected' : '' ?>>C</option>
                 <option value="3" <?= in_array(3, $values['languages'] ?? []) ? 'selected' : '' ?>>C++</option>
@@ -138,7 +140,7 @@
         </div>
 
         <div class="checkbox-group">
-            <input type="checkbox" name="contract_agreed" value="1" <?= isset($values['contract_agreed']) && $values['contract_agreed'] ? 'checked' : '' ?> class="<?= $errors['contract_agreed'] ? 'error-field' : '' ?>">
+            <input type="checkbox" name="contract_agreed" value="1" <?= isset($values['contract_agreed']) && $values['contract_agreed'] ? 'checked' : '' ?> class="<?= isset($errors['contract_agreed']) && $errors['contract_agreed'] ? 'error-field' : '' ?>">
             <label class="required">Я ознакомлен с контрактом и согласен</label>
         </div>
 
@@ -147,4 +149,3 @@
 </div>
 </body>
 </html>
-
