@@ -1,16 +1,13 @@
--- Создание таблицы языков программирования
 CREATE TABLE IF NOT EXISTS programming_languages (
     id INT PRIMARY KEY,
     name VARCHAR(50) NOT NULL
 );
 
--- Вставка языков
 INSERT IGNORE INTO programming_languages (id, name) VALUES
 (1, 'Pascal'), (2, 'C'), (3, 'C++'), (4, 'JavaScript'),
 (5, 'PHP'), (6, 'Python'), (7, 'Java'), (8, 'Haskell'),
 (9, 'Clojure'), (10, 'Prolog'), (11, 'Scala'), (12, 'Go');
 
--- Основная таблица заявок
 CREATE TABLE IF NOT EXISTS applications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(150) NOT NULL,
@@ -23,7 +20,6 @@ CREATE TABLE IF NOT EXISTS applications (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Таблица связи (многие ко многим)
 CREATE TABLE IF NOT EXISTS application_languages (
     application_id INT UNSIGNED NOT NULL,
     language_id INT NOT NULL,
