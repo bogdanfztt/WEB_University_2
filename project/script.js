@@ -1,4 +1,4 @@
-const API_BASE = '/project/api.php';
+const API_BASE = '/WEB_University_2/project/api.php';
 
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
